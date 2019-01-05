@@ -33,8 +33,8 @@ class LogReport:
         :return: None
         """
         self.cur.execute(""" SELECT title as Article_Name, count(log.id) as Views
-            FROM articles, log
-            WHERE log.status like '%OK' and log.path like '%' || articles.slug || '%'
+            FROM log JOIN articles
+            ON log.path = concat('/article/', articles.slug)
             GROUP BY Article_Name
             ORDER BY Views desc
             LIMIT 3;""")
@@ -50,7 +50,7 @@ class LogReport:
         """
         self.cur.execute(""" SELECT name, count(log.id) as Views
             FROM authors JOIN articles on authors.id = articles.author, log
-            WHERE log.status like '%OK' and log.path like '%' || articles.slug || '%'
+            WHERE log.status = '200 OK' and log.path = concat('/article/', articles.slug)
             GROUP BY name
             ORDER BY Views desc;""")
         print("{:<50}{:<50}".format("Author_Name", "Views"))
