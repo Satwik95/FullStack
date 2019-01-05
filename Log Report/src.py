@@ -26,6 +26,7 @@ class LogReport:
         for res in result:
             print("{:<50}{:<50}".format(res[0], res[1]))
 
+
     def query1(self):
         """
         Query: What are the most popular three articles of all time?
@@ -38,6 +39,7 @@ class LogReport:
             ORDER BY Views desc
             LIMIT 3;""")
         print("{:<50}{:<50}".format("Article_Name", "Views"))
+        print("---------------------------------------------------------")
         result = self.cur.fetchall()
         self.show(result)
 
@@ -52,6 +54,7 @@ class LogReport:
             GROUP BY name
             ORDER BY Views desc;""")
         print("{:<50}{:<50}".format("Author_Name", "Views"))
+        print("---------------------------------------------------------")
         result = self.cur.fetchall()
         self.show(result)
 
@@ -59,9 +62,9 @@ class LogReport:
         """
         Query : On which days did more than 1% of requests lead to errors?
         Using the following two views, namely Errors and Total to find the dates where request failures > 1%
-        view 1 (Errors) : create view my_view as select time::date as Date ,count(status) from log where status like
+        view 1 (Errors) : create view Errors as select time::date as Date ,count(status) from log where status like
                           '4%' or status like '3%' group by Date;
-        view 2 (Total) : select time::date as Date, count(status) from log group by Date;
+        view 2 (Total) : create view Total as select time::date as Date, count(status) from log group by Date;
         :return: None
         """
         self.cur.execute(""" SELECT Errors.Date, Round((Errors.count*1.0/Total.count*1.0)*100,2) as perc
@@ -69,16 +72,17 @@ class LogReport:
             WHERE (Errors.count*1.0/Total.count*1.0)*100 > 1;""")
         res = self.cur.fetchone()
         print("{:<50}{:<50}".format("Day", "Percentage error"))
-        print(type(res[0]), type(res[1]))
-        #self.show(res)
+        print("---------------------------------------------------------")
+        res = "{:%d, %b %Y}".format(res[0]), "{}".format(res[1])
+        print("{:<50}{:<50}".format(res[0], res[1]))
 
 
 def main():
     log = LogReport()
-    #log.query1()
-    print("\n---------------------------------------------------------\n")
-    #log.query2()
-    print("\n---------------------------------------------------------\n")
+    log.query1()
+    print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+    log.query2()
+    print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
     log.query3()
     del log
 
