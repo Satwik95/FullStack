@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 """
 Udacity Fullstack Nanodegree, Project: Log Analysis
 This program creates a reporting tool, returning results on the basis of some queries.
@@ -26,18 +28,17 @@ class LogReport:
         for res in result:
             print("{:<50}{:<50}".format(res[0], res[1]))
 
-
     def query1(self):
         """
         Query: What are the most popular three articles of all time?
         :return: None
         """
-        self.cur.execute(""" SELECT title as Article_Name, count(log.id) as Views
-            FROM log JOIN articles
-            ON log.path = concat('/article/', articles.slug)
-            GROUP BY Article_Name
-            ORDER BY Views desc
-            LIMIT 3;""")
+        self.cur.execute(" SELECT title as Article_Name, count(log.id) as Views "
+                         "FROM log JOIN articles "
+                         "ON log.path = concat('/article/', articles.slug) "
+                         "GROUP BY Article_Name "
+                         "ORDER BY Views desc "
+                         "LIMIT 3;")
         print("{:<50}{:<50}".format("Article_Name", "Views"))
         print("---------------------------------------------------------")
         result = self.cur.fetchall()
@@ -48,11 +49,11 @@ class LogReport:
         Query: Who are the most popular article authors of all time?
         :return: None
         """
-        self.cur.execute(""" SELECT name, count(log.id) as Views
-            FROM authors JOIN articles on authors.id = articles.author, log
-            WHERE log.status = '200 OK' and log.path = concat('/article/', articles.slug)
-            GROUP BY name
-            ORDER BY Views desc;""")
+        self.cur.execute(" SELECT name, count(log.id) as Views "
+                         "FROM authors JOIN articles on authors.id = articles.author, log "
+                         "WHERE log.status = '200 OK' and log.path = concat('/article/', articles.slug) "
+                         "GROUP BY name "
+                         "ORDER BY Views desc;")
         print("{:<50}{:<50}".format("Author_Name", "Views"))
         print("---------------------------------------------------------")
         result = self.cur.fetchall()
@@ -67,9 +68,9 @@ class LogReport:
         view 2 (Total) : create view Total as select time::date as Date, count(status) from log group by Date;
         :return: None
         """
-        self.cur.execute(""" SELECT Errors.Date, Round((Errors.count*1.0/Total.count*1.0)*100,2) as perc
-            FROM Errors JOIN Total ON Errors.Date = Total.Date
-            WHERE (Errors.count*1.0/Total.count*1.0)*100 > 1;""")
+        self.cur.execute(" SELECT Errors.Date, Round((Errors.count*1.0/Total.count*1.0)*100,2) as perc "
+                         "FROM Errors JOIN Total ON Errors.Date = Total.Date "
+                         "WHERE (Errors.count*1.0/Total.count*1.0)*100 > 1;")
         res = self.cur.fetchone()
         print("{:<50}{:<50}".format("Day", "Percentage error"))
         print("---------------------------------------------------------")
