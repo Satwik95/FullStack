@@ -1,16 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-	{% if title %}
-		<title>Yo</title>
-	{% else %}
-		<title>TEST 101</title>
-	{% endif %}
-</head>
-<body>
+{% extends "layout.html" %}
+{% block content %}
 	{% for post in posts %}
-		<h1>{{ post.author }}</h1>
-		<p> {{ post.content }} </p>
+		<article class="media content-section">
+		  <div class="media-body">
+		    <div class="article-metadata">
+		      <a class="mr-2" href="#">{{ post.author }}</a>
+		    </div>
+		    <p class="article-content">{{ post.content }}</p>
+		  </div>
+		</article>
 	{% endfor %}
-</body>
-</html>
+{% endblock content %}
