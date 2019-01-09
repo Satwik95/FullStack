@@ -2,10 +2,6 @@
 
 This project's objective is to create a reporting tool, returning results on the basis of queries, from a database using Python and PostgreSQL.
 
-## Getting Started
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-
 ### Prerequisites
 
 * Vagrant and Virtual Box
